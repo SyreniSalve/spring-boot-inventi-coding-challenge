@@ -1,35 +1,58 @@
 -- DML
-INSERT INTO transaction (operation_date, beneficiary, comment, amount, currency)
-VALUES ('2022-06-01', 'PAYPAL', null, 104.93, 'EUR');
-VALUES ('2022-06-01', 'APPLE', null, 00.99, 'EUR');
-VALUES ('2022-06-02', 'PAYPAL', null, 38.97, 'EUR');
-VALUES ('2022-06-02', 'John Doe', null, 15, 'EUR');
-VALUES ('2022-06-02', 'LIDL Cosmos', null, 13.22, 'EUR');
-VALUES ('2022-06-03', ' ', null, 0.9, 'EUR');
-VALUES ('2022-06-02', 'John Doe', null, 20, 'EUR');
-VALUES ('2022-06-04', 'UAB HELLO', null, 7.9, 'EUR');
-VALUES ('2022-06-05', 'LIDL Cosmos', null, 14.26, 'EUR');
-VALUES ('2022-06-06', 'John Doe', null, 30, 'EUR');
-VALUES ('2022-06-06', 'LIDL Cosmos', null, 43.77, 'EUR');
-VALUES ('2022-06-07', 'LIDL Cosmos', null, 5.95, 'EUR');
-
-
-INSERT INTO account (account_number, balance)
-VALUES ('LT730000000000000000', 336.55);
-
 INSERT INTO user (first_name, last_name)
 VALUES ('Jane', 'Doe');
+VALUES ('John', 'Doe');
 
-INSERT INTO account_transaction (user_id, account_id, transaction_id)
-VALUES (1, 1, 1);
-VALUES (1, 1, 2);
-VALUES (1, 1, 3);
-VALUES (1, 1, 4);
-VALUES (1, 1, 5);
-VALUES (1, 1, 6);
-VALUES (1, 1, 7);
-VALUES (1, 1, 8);
-VALUES (1, 1, 9);
-VALUES (1, 1, 10);
-VALUES (1, 1, 11);
-VALUES (1, 1, 12);
+INSERT INTO account (account_number)
+VALUES ('LT730000000000000000');
+VALUES ('LT730000000000000001');
+VALUES ('LT730000000000000002');
+
+INSERT INTO balance (balance, date, account_id)
+VALUES (366.55,'2022-06-01', 1);
+VALUES (261.62,'2022-06-01', 1);
+VALUES (260.63,'2022-06-01', 1);
+VALUES (221.66,'2022-06-02', 1);
+VALUES (206.66,'2022-06-02', 1);
+VALUES (193.44,'2022-06-02', 1);
+VALUES (192.54,'2022-06-03', 1);
+VALUES (212.54,'2022-06-04', 1);
+VALUES (204.64,'2022-06-05', 1);
+VALUES (190.38,'2022-06-06', 1);
+VALUES (160.38,'2022-06-06', 1);
+VALUES (116.61,'2022-06-07', 1);
+VALUES (110.66,'2022-06-08', 1);
+
+INSERT INTO transaction (operation_date, beneficiary, comment, status, amount, currency)
+VALUES ('LT730000000000000000','2022-06-01', 'PAYPAL', null, 'WITHDRAW', 104.93, 'EUR');
+VALUES ('LT730000000000000000','2022-06-01', 'APPLE', null, 'WITHDRAW', 00.99, 'EUR');
+VALUES ('LT730000000000000000','2022-06-02', 'PAYPAL', null, 'WITHDRAW', 38.97, 'EUR');
+VALUES ('LT730000000000000000','2022-06-02', 'John Doe', null, 'WITHDRAW', 15, 'EUR');
+VALUES ('LT730000000000000000','2022-06-02', 'LIDL Cosmos', null, 'WITHDRAW', 13.22, 'EUR');
+VALUES ('LT730000000000000000','2022-06-03', ' ', null, 'WITHDRAW', 0.9, 'EUR');
+VALUES ('LT730000000000000000','2022-06-04', 'John Doe', null, 'DEPOSIT', 20, 'EUR');
+VALUES ('LT730000000000000000','2022-06-05', 'UAB HELLO', null, 'WITHDRAW', 7.9, 'EUR');
+VALUES ('LT730000000000000000','2022-06-06', 'LIDL Cosmos', null, 'WITHDRAW', 14.26, 'EUR');
+VALUES ('LT730000000000000000','2022-06-06', 'John Doe', null, 'WITHDRAW', 30, 'EUR');
+VALUES ('LT730000000000000000','2022-06-07', 'LIDL Cosmos', null, 'WITHDRAW', 43.77, 'EUR');
+VALUES ('LT730000000000000000','2022-06-08', 'LIDL Cosmos', null, 'WITHDRAW', 5.95, 'EUR');
+
+INSERT INTO user_account (user_id, account_id)
+VALUES (1, 1);
+VALUES (1, 3);
+VALUES (2, 2);
+
+INSERT INTO balance_transaction (balance_id, transaction_id)
+VALUES (1, 1);
+VALUES (1, 3);
+VALUES (1, 4);
+VALUES (1, 5);
+VALUES (1, 6);
+VALUES (1, 7);
+VALUES (1, 8);
+VALUES (1, 9);
+VALUES (1, 10);
+VALUES (1, 11);
+VALUES (1, 12);
+
+

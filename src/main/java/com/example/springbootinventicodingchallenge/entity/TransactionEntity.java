@@ -8,11 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import java.time.Instant;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transaction")
@@ -22,25 +21,35 @@ import java.time.Instant;
 @AllArgsConstructor
 public class TransactionEntity extends AbstractEntity {
 
-    @NotBlank
+    @NotNull
+    @Column(name = "account_number")
+    @Size(min = 20, max = 20)
+    private String accountNumber;
+
+    @NotNull
     @Column(name = "operation_date")
     @JsonSerialize(using = LocalDateSerializer.class)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Instant operationDate = Instant.now();
+    private LocalDate operationDate;
 
-    @NotBlank
+    @NotNull
     @Column(name = "beneficiary")
     private String beneficiary;
 
     @Column(name = "comment")
     private String comment;
 
-    @NotBlank
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private Status status;
+
+    @NotNull
     @Column(name = "amount")
     private double amount;
 
-    @NotBlank
+    @NotNull
     @Column(name = "currency")
     private String currency;
 

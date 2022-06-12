@@ -4,6 +4,12 @@ import com.example.springbootinventicodingchallenge.entity.AccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+
+    void deleteById(Long id);
+
+    AccountEntity findByAccountNumber(String accountNumber);
+
 }

@@ -21,16 +21,11 @@ public class UserEntity extends AbstractEntity{
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToMany
-    @JoinTable(name = "account_transaction",
+    @OneToMany
+    @JoinTable(name = "user_account",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "account_id"))
     private List<AccountEntity> accounts = new ArrayList<>();
 
-    @OneToMany
-    @JoinTable(name = "account_transaction",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "transaction_id"))
-    private List<TransactionEntity> transactions = new ArrayList<>();
 
 }
