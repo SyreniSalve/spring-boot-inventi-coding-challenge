@@ -14,9 +14,13 @@ CREATE TABLE account
 CREATE TABLE balance
 (
     `id`         bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `date`       date               NOT NULL,
-    `account_id` bigint             NOT NULL,
-    FOREIGN KEY (`account_id`) REFERENCES account (`id`),
+    `account_number` varchar(20)             NOT NULL,
+    `operation_date` date               NOT NULL,
+    `beneficiary`    varchar(255)       NOT NULL,
+    `comment`        varchar(255) NULL,
+    `amount`         double             NOT NULL,
+    `currency`       varchar(120)       NOT NULL,
+    `status`         varchar(20)        NOT NULL,
 
 
 );
@@ -28,9 +32,9 @@ CREATE TABLE transaction
     `operation_date` date               NOT NULL,
     `beneficiary`    varchar(255)       NOT NULL,
     `comment`        varchar(255) NULL,
-    `status`         varchar(20)        NOT NULL,
     `amount`         double             NOT NULL,
     `currency`       varchar(120)       NOT NULL,
+    `status`         varchar(20)        NOT NULL,
 --     `user_id`        bigint             NOT NULL,
 --     `account_id`     bigint             NOT NULL,
 --     FOREIGN KEY (`user_id`) REFERENCES user (`id`),

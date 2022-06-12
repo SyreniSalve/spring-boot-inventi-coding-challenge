@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,19 +22,34 @@ import java.util.List;
 @Table(name = "balance")
 public class BalanceEntity extends AbstractEntity {
 
-    @OneToOne
-    @JoinColumn(insertable = false, updatable = false, name = "account_id", referencedColumnName = "id", nullable = false)
-    private AccountEntity account;
+    @NotNull
+    @Column(name = "account_number")
+    @Size(min = 20, max = 20)
+    private String accountNumber;
 
-    @NotBlank
-    private double balance;
-
-    @NotBlank
-    @Column(name = "date")
+    @NotNull
+    @Column(name = "operation_date")
     @JsonSerialize(using = LocalDateSerializer.class)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private LocalDate operationDate;
+
+    @Column(name = "beneficiary")
+    private String beneficiary;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @NotNull
+    @Column(name = "amount")
+    private double amount;
+
+    @Column(name = "currency")
+    private String currency;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private Status status;
 
     @OneToMany
     @JoinTable(name = "balance_transaction",
@@ -41,9 +57,9 @@ public class BalanceEntity extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "transaction_id"))
     private List<TransactionEntity> transaction;
 
-    public BalanceEntity(AccountEntity account) {
-        this.account = account;
-        this.balance = 0;
+    public BalanceEntity(String accountNumber) {
+        this.accountNumber = accountNumber;
+        this.amount = 0;
     }
 
 }

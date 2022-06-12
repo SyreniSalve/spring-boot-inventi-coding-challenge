@@ -9,7 +9,11 @@ import java.util.List;
 @Repository
 public interface BalanceRepository extends JpaRepository<BalanceEntity, Long> {
 
-    List<BalanceEntity> findAllByDate(LocalDate date);
+    List<BalanceEntity> findAllByOperationDate(LocalDate date);
+
+    List<BalanceEntity> findAllByOperationDateBetween(LocalDate from, LocalDate to);
+
+    List<BalanceEntity> findAll();
 
 
 }

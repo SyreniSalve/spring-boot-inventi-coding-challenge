@@ -20,6 +20,52 @@ public class BalanceServiceImpl implements BalanceService {
 
     private static double FEE = 0;
 
+    public void setInceptiveBalance(BalanceEntity inceptiveBalance) {
+        inceptiveBalance.setBeneficiary(" ");
+        inceptiveBalance.setComment("The balance for the beginning");
+        inceptiveBalance.setStatus(Status.INCEPTIVE_BALANCE);
+    }
+
+    public BalanceEntity findInceptiveBalance() {
+        List<BalanceEntity> balanceList = this.balanceRepository.findAll();
+        BalanceEntity inceptiveBalance = balanceList.get(0);
+        setInceptiveBalance(inceptiveBalance);
+        return inceptiveBalance;
+    }
+
+    public void setFinalBalance(BalanceEntity finalBalance) {
+        finalBalance.setBeneficiary(" ");
+        finalBalance.setComment("Balance at end");
+        finalBalance.setStatus(Status.FINAL_BALANCE);
+    }
+
+
+    public BalanceEntity findLastBalance() {
+        List<BalanceEntity> balanceList = this.balanceRepository.findAll();
+        BalanceEntity finalBalance = balanceList.get(balanceList.size() - 1);
+        setFinalBalance(finalBalance);
+        return finalBalance;
+    }
+
+    public BalanceEntity findLastBalanceInTheList(List<TransactionEntity> transactionList) {
+        LocalDate from = transactionList.get(0).getOperationDate();
+        LocalDate to = transactionList.get(transactionList.size() - 1).getOperationDate();
+        List<BalanceEntity> balanceList = this.balanceRepository.findAllByOperationDateBetween(from, to);
+        BalanceEntity inceptiveBalance = balanceList.get(balanceList.size() - 1);
+        setInceptiveBalance(inceptiveBalance);
+        return inceptiveBalance;
+    }
+
+
+    public BalanceEntity findInceptiveBalanceInTheList(List<TransactionEntity> transactionList) {
+        LocalDate from = transactionList.get(0).getOperationDate();
+        LocalDate to = transactionList.get(transactionList.size() - 1).getOperationDate();
+        List<BalanceEntity> balanceList = this.balanceRepository.findAllByOperationDateBetween(from, to);
+        BalanceEntity finalBalance = balanceList.get(0);
+        setFinalBalance(finalBalance);
+        return finalBalance;
+    }
+
     public BalanceEntity updateBalance(BalanceEntity balance, TransactionEntity transaction) {
         double newBalance = 0;
         if (transaction.getStatus().equals(Status.DEPOSIT)) {
@@ -32,17 +78,17 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     public BalanceEntity saveBalance(BalanceEntity balanceEntity, double balance, TransactionEntity transaction) {
-        balanceEntity.setBalance(balance);
-        balanceEntity.setDate(LocalDate.now());
+        balanceEntity.setAmount(balance);
+        balanceEntity.setOperationDate(LocalDate.now());
         balanceEntity.getTransaction().add(transaction);
-        balanceEntity.setAccount(balanceEntity.getAccount());
+        balanceEntity.setAccountNumber(balanceEntity.getAccountNumber());
         return this.balanceRepository.save(balanceEntity);
     }
 
     public BalanceEntity findFinalBalanceByDate(LocalDate date) {
         Long count = Long.MIN_VALUE;
         BalanceEntity result = null;
-        List<BalanceEntity> balanceList = this.balanceRepository.findAllByDate(date);
+        List<BalanceEntity> balanceList = this.balanceRepository.findAllByOperationDate(date);
         for (BalanceEntity balance : balanceList) {
             if (balance.getId() > count) {
                 result = balance;
@@ -55,7 +101,7 @@ public class BalanceServiceImpl implements BalanceService {
     public BalanceEntity findInceptiveBalanceByDate(LocalDate date) {
         Long count = Long.MAX_VALUE;
         BalanceEntity result = null;
-        List<BalanceEntity> balanceList = this.balanceRepository.findAllByDate(date);
+        List<BalanceEntity> balanceList = this.balanceRepository.findAllByOperationDate(date);
         for (BalanceEntity balance : balanceList) {
             if (balance.getId() < count) {
                 result = balance;
@@ -68,7 +114,7 @@ public class BalanceServiceImpl implements BalanceService {
     @Override
     public double deposit(BalanceEntity balance, TransactionEntity transaction) {
         double amount = transaction.getAmount();
-        double getBalance = balance.getBalance();
+        double getBalance = balance.getAmount();
         if (amount > 0) {
             getBalance += amount;
             getBalance -= FEE;
@@ -82,7 +128,7 @@ public class BalanceServiceImpl implements BalanceService {
     @Override
     public double withdraw(BalanceEntity balance, TransactionEntity transaction) {
         double amount = transaction.getAmount();
-        double getBalance = balance.getBalance();
+        double getBalance = balance.getAmount();
         if (amount > 0) {
             if ((amount + FEE) <= getBalance) {
                 getBalance -= amount;
