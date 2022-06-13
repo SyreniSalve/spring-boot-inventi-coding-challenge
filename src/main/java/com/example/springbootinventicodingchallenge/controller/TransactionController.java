@@ -28,6 +28,11 @@ public class TransactionController {
     @Autowired
     private BalanceServiceImpl balanceServiceImpl;
 
+    @GetMapping("/all")
+    public ResponseEntity<List<TransactionEntity>> findAll() {
+        return new ResponseEntity<>(this.transactionService.findAll(), HttpStatus.OK);
+    }
+
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd")
     @GetMapping("/get/{date_from}/{date_to}")
@@ -63,5 +68,10 @@ public class TransactionController {
     public ResponseEntity<TransactionEntity> saveTransaction(@RequestBody TransactionEntity transaction) {
         TransactionEntity newTransaction  = this.transactionService.saveTransaction(transaction);
         return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/import")
+    public void readeCSVFile(@RequestParam String file) throws IOException {
+       this.transactionService.addCSVFileInformationInDataBase(file);
     }
 }

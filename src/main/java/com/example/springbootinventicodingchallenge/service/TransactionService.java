@@ -31,6 +31,8 @@ public class TransactionService {
     @Autowired
     private BalanceServiceImpl balanceService;
 
+    @Autowired
+    private ReadCSVFile readCSVFile;
 
 
     public TransactionEntity saveTransaction(TransactionEntity transaction) {
@@ -87,5 +89,20 @@ public class TransactionService {
         BalanceEntity inceptiveBalance = this.balanceService.findInceptiveBalanceInTheList(transactionList);
         BalanceEntity finalBalance = this.balanceService.findLastBalanceInTheList(transactionList);
         exportCSVLogic(inceptiveBalance, finalBalance, transactionList, response);
+    }
+
+    public void addCSVFileInformationInDataBase(String fileName) throws IOException{
+        List<BalanceEntity> balanceList = this.readCSVFile.getListOfBalance(fileName);
+        List<TransactionEntity> transactionList = this.readCSVFile.getTListOfTransactions(fileName);
+        this.balanceService.saveBalance(balanceList.get(0));
+        saveTransaction(transactionList.get(0));
+        this.balanceService.newBalance(balanceList.get(0), transactionList.get(0));
+        for (int x = 1; 1 < transactionList.size()-2; x++) {
+            saveTransaction(transactionList.get(x));
+           List<BalanceEntity> balances =  this.balanceService.findAllBalances();
+           BalanceEntity newBalance = this.balanceService.newBalance(balances.get(balances.size() - 1), transactionList.get(x));
+           this.balanceService.saveBalanceWithTransaction(newBalance, transactionList.get(x));
+        }
+        this.balanceService.saveBalance(balanceList.get(1));
     }
 }

@@ -4,6 +4,7 @@ import com.example.springbootinventicodingchallenge.entity.BalanceEntity;
 import com.example.springbootinventicodingchallenge.entity.Status;
 import com.example.springbootinventicodingchallenge.entity.TransactionEntity;
 import com.example.springbootinventicodingchallenge.repository.BalanceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +13,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class BalanceServiceImpl implements BalanceService {
 
 
     @Autowired
     private BalanceRepository balanceRepository;
+
 
     private static double FEE = 0;
 
@@ -66,23 +69,38 @@ public class BalanceServiceImpl implements BalanceService {
         return finalBalance;
     }
 
-    public BalanceEntity updateBalance(BalanceEntity balance, TransactionEntity transaction) {
-        double newBalance = 0;
+    public BalanceEntity newBalance(BalanceEntity balance, TransactionEntity transaction) {
+        double newAmount = 0;
         if (transaction.getStatus().equals(Status.DEPOSIT)) {
-            newBalance = deposit(balance, transaction);
+            newAmount = deposit(balance, transaction);
 
         } else {
-            newBalance = withdraw(balance, transaction);
+            newAmount = withdraw(balance, transaction);
         }
-        return saveBalance(balance, newBalance, transaction);
+        BalanceEntity newBalance = new BalanceEntity();
+        newBalance.setAccountNumber(transaction.getAccountNumber());
+        newBalance.setOperationDate(transaction.getOperationDate());
+        newBalance.setBeneficiary(transaction.getBeneficiary());
+        newBalance.setComment(transaction.getComment());
+        newBalance.setAmount(newAmount);
+        newBalance.setCurrency(transaction.getCurrency());
+        newBalance.setStatus(null);
+        return newBalance;
     }
 
-    public BalanceEntity saveBalance(BalanceEntity balanceEntity, double balance, TransactionEntity transaction) {
-        balanceEntity.setAmount(balance);
-        balanceEntity.setOperationDate(LocalDate.now());
+    public void saveBalanceWithTransaction(BalanceEntity balanceEntity, TransactionEntity transaction) {
         balanceEntity.getTransaction().add(transaction);
-        balanceEntity.setAccountNumber(balanceEntity.getAccountNumber());
-        return this.balanceRepository.save(balanceEntity);
+        this.balanceRepository.save(balanceEntity);
+    }
+
+    public void saveBalance(BalanceEntity balanceEntity) {
+        try {
+            log.info("Object: {}", balanceEntity);
+            this.balanceRepository.save(balanceEntity);
+            log.info("Object after saving: {}", balanceEntity);
+        } catch (Exception e) {
+            throw new NullPointerException("Balance not exits");
+        }
     }
 
     public BalanceEntity findFinalBalanceByDate(LocalDate date) {
@@ -138,5 +156,9 @@ public class BalanceServiceImpl implements BalanceService {
         } else {
             throw new NullPointerException("Negative amount cannot be withdrawn");
         }
+    }
+
+     public List<BalanceEntity> findAllBalances() {
+        return this.balanceRepository.findAll();
     }
 }

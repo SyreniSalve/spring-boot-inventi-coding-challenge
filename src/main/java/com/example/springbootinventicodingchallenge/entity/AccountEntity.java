@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class AccountEntity extends AbstractEntity{
 
-    @NotBlank
+    @NotNull
     @Column(name = "account_number", unique = true)
     @Size(min = 20, message = "{validation.name.size.too_short}")
     @Size(max = 20, message = "{validation.name.size.too_long}")

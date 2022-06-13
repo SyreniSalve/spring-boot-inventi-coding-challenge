@@ -3,7 +3,7 @@ package com.example.springbootinventicodingchallenge.entity;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 @Setter
 public class UserEntity extends AbstractEntity{
 
-    @NotBlank
+    @NotNull
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 

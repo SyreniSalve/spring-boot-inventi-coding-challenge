@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,6 +42,11 @@ public class BalanceController {
                                                                @JsonFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         BalanceEntity balance = this.balanceServiceImpl.findInceptiveBalanceByDate(date);
         return new ResponseEntity<>(balance, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<BalanceEntity>> findAll() {
+        return new ResponseEntity<>(this.balanceServiceImpl.findAllBalances(), HttpStatus.OK);
     }
 
 }

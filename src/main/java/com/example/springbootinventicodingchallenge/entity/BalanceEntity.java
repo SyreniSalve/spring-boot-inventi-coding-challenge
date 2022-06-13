@@ -3,10 +3,7 @@ package com.example.springbootinventicodingchallenge.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "balance")
+@ToString
 public class BalanceEntity extends AbstractEntity {
 
     @NotNull
@@ -44,6 +42,7 @@ public class BalanceEntity extends AbstractEntity {
     @Column(name = "amount")
     private double amount;
 
+    @NotNull
     @Column(name = "currency")
     private String currency;
 
