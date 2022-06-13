@@ -25,8 +25,6 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @Autowired
-    private BalanceServiceImpl balanceServiceImpl;
 
     @GetMapping("/all")
     public ResponseEntity<List<TransactionEntity>> findAll() {
